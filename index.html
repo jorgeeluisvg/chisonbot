@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChisonBot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body class="bg-gray-100 h-screen flex items-center justify-center">
+    <div class="w-full max-w-2xl mx-auto bg-white rounded-lg shadow-md p-4 flex flex-col h-full">
+        <div id="chatBox" class="flex-1 overflow-y-auto p-4 space-y-4 border-b border-gray-200">
+            <!-- Mensajes -->
+        </div>
+        <div class="mt-4 flex items-center">
+            <input id="messageInput" type="text" class="flex-1 border border-gray-300 rounded-lg p-2 mr-2" placeholder="Escribe tu mensaje...">
+            <button id="sendButton" class="bg-blue-500 text-white p-2 rounded-lg">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+      const chatBox = document.getElementById('chatBox');
+      const messageInput = document.getElementById('messageInput');
+      const sendButton = document.getElementById('sendButton');
+  
+      async function sendMessage() {
+          const message = messageInput.value.trim();
+          if (message) {
+              // Mostrar el mensaje del usuario en el chat
+              const userMessageElement = document.createElement('div');
+              userMessageElement.className = 'bg-blue-500 text-white p-3 rounded-lg self-end';
+              userMessageElement.innerHTML = `<p>${message}</p>`;
+              chatBox.appendChild(userMessageElement);
+              chatBox.scrollTop = chatBox.scrollHeight; // Desplazar hacia abajo
+  
+              try {
+                  // Enviar el mensaje al backend en localhost
+                  const response = await fetch('http://localhost:8000/chat/', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({ text: message })
+                  });
+  
+                  if (!response.ok) {
+                      throw new Error('Failed to send message');
+                  }
+  
+                  // Obtener la respuesta del backend
+                  const data = await response.json();
+  
+                  // Mostrar la respuesta del backend en el chat
+                  const botMessageElement = document.createElement('div');
+                  botMessageElement.className = 'bg-gray-200 p-3 rounded-lg';
+                  botMessageElement.innerHTML = `<p>${data.response}</p>`;
+                  chatBox.appendChild(botMessageElement);
+                  chatBox.scrollTop = chatBox.scrollHeight; // Desplazar hacia abajo
+              } catch (error) {
+                  console.error('Error:', error);
+                  // Manejar el error
+              }
+  
+              // Limpiar el campo de entrada
+              messageInput.value = '';
+          }
+      }
+  
+      sendButton.addEventListener('click', sendMessage);
+      messageInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+              sendMessage();
+          }
+      });
+  </script>
+  
+</body>
+</html>

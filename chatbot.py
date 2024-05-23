@@ -1,10 +1,15 @@
 from fastapi import FastAPI, Request
 from pydantic import BaseModel
-import spacy
+import nltk
 from difflib import get_close_matches
 from typing import Any
 from starlette.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
+
+nltk.download('punkt')
+nltk.download('maxent_ne_chunker')
+nltk.download('words')
+nltk.download('averaged_perceptron_tagger')
 
 app = FastAPI()
 
@@ -16,15 +21,6 @@ app.add_middleware(
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
-
-# ... (El resto del código anterior permanece igual) ...
-
-# Intentar cargar el modelo de spaCy para español
-try:
-    nlp = spacy.load("es_core_news_sm")
-except:
-    print("El modelo de spaCy para español no está instalado. Ejecuta 'python -m spacy download es_core_news_sm' para instalarlo.")
-    exit()
 
 # Datos de la empresa y sus terminales
 datos_empresa = {
@@ -85,11 +81,16 @@ faqs = [
 
 # Función para encontrar la respuesta a partir de entidades nombradas
 def get_info_based_on_entity(text):
-    doc = nlp(text)
+    # Tokenización
+    tokens = nltk.word_tokenize(text)
+    # Etiquetado de partes del discurso
+    tagged_tokens = nltk.pos_tag(tokens)
+    # Reconocimiento de entidades
+    entities = nltk.chunk.ne_chunk(tagged_tokens)
 
-    for ent in doc.ents:
-        if ent.label_ == "ORG":  # Organización puede ser usado para nombres de terminales
-            terminal_encontrada = ent.text
+    for subtree in entities:
+        if isinstance(subtree, nltk.Tree) and subtree.label() == 'ORGANIZATION':
+            terminal_encontrada = " ".join([token for token, pos in subtree.leaves()])
             terminales = list(datos_empresa.keys())
             coincidencias = get_close_matches(terminal_encontrada, terminales, n=1, cutoff=0.8)
             if coincidencias:
@@ -144,5 +145,3 @@ async def chat_endpoint(message: Message):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
-
-

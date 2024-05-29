@@ -1,21 +1,23 @@
-Preguntas sobre terminales específicas:
-#FUNCIONAN
+
 ¿Cuál es el número de teléfono de la Terminal Internacional de Manzanillo?
+
 Dame el correo de facturación de la Ensenada International Terminal.
+
 ¿Cómo puedo contactar a la Internacional de Contenedores Asociados de Veracruz?
-¿Cuáles son los horarios de operación de la Terminal Internacional de Manzanillo? //checar no da horarios da numero
 
 ¿Cuál es el modo de transporte más apropiado para exportar productos perecederos?
+
 ¿Qué modalidad de transporte puedo utilizar para enviar mercancía a Europa?
+
 ¿Cómo decido el mejor modo de transporte para mi producto?
 
 ¿Cuál es el valor del flete para el transporte internacional (marítimo)?
+
 ¿Qué documentación se requiere para exportar a Estados Unidos?
+
 ¿Cuáles son los requisitos para el embalaje de productos frágiles?
 
 ¿Cómo puedo contratar un seguro de transporte para mi carga?
 
-#NO FUNCIONAN
-Necesito los datos de Lázaro Cárdenas Terminal Portuaria de Contenedores.
-¿Pueden ustedes hacer el envío de mi mercancía a Canadá?
+
 
